@@ -83,6 +83,4 @@ function createMockArray(amount) {
   return array;
 }
 
-const mockArray = createMockArray(10);
-
-console.log(mockArray);
+createMockArray(10);
