@@ -32,22 +32,23 @@ const photos = [
 ];
 
 function getRandomArray(array) {
-  const arrayNew = new Array(getRandomNumber(1, array.length));
-  for (let i = 0; i < arrayNew.length; i++ ){
-    arrayNew[i]=array.splice(getRandomNumber(0, array.length-1), 1).join();
-  }
-  return arrayNew;
+  const arrayNew = new Array(getRandomNumber(1, array.length)).fill(' ');
+
+  arrayNew.forEach((element, index) => {
+    const ranItem = getRandomItem(array);
+
+    arrayNew[index] = ranItem;
+  });
+
+  return [...new Set(arrayNew)];
 }
 
-let imageNumber = 0;
-
-function createMockObject() {
+function createMockObject(imageNumber) {
   const locationData = {
     lat: getRandomValue(35.65000, 35.70000, 5),
     lng: getRandomValue(139.70000, 139.80000, 5)
   };
 
-  imageNumber +=1;
   return {
     author: {
       avatar: `img/avatars/user${imageNumber < 10 ? `0${imageNumber}` : imageNumber}.png`
@@ -76,10 +77,12 @@ function createMockArray(amount) {
   const array = [];
 
   for (let i = 1; i <= amount; i++) {
-    array.push(createMockObject());
+    array.push(createMockObject(i));
   }
 
   return array;
 }
 
-export const mockArray = createMockArray(10);
+const mockArray = createMockArray(10);
+
+console.log(mockArray);
