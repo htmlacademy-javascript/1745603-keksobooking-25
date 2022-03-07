@@ -1,20 +1,20 @@
 // Получение рандомного числа
 
-export function getRandomNumber (minValue, maxValue) {
+function getRandomNumber (minValue, maxValue) {
   if (minValue < 0) {
     throw new Error('Укажите минимальное значение больше 0');
   }
   return Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue;
 }
 
-export function getRandomItem(arr) {
+function getRandomItem(arr) {
   return arr[getRandomNumber(0, arr.length - 1)];
 }
 
 
 // Получение числа с плавающей точкой
 
-export function getRandomValue (minValue, maxValue, range) {
+function getRandomValue (minValue, maxValue, range) {
   if (minValue <= 0) {
     throw new Error('Укажите минимальное значение больше 0');
   }
@@ -26,7 +26,7 @@ export function getRandomValue (minValue, maxValue, range) {
 
 // Создание массива рандомной длины
 
-export function getRandomArray(array) {
+function getRandomArray(array) {
   const arrayNew = new Array(getRandomNumber(1, array.length)).fill(' ');
 
   arrayNew.forEach((element, index) => {
@@ -37,3 +37,5 @@ export function getRandomArray(array) {
 
   return [...new Set(arrayNew)];
 }
+
+export {getRandomNumber, getRandomItem, getRandomValue, getRandomArray};
