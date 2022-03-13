@@ -38,16 +38,12 @@ function getRandomArray(array) {
   return [...new Set(arrayNew)];
 }
 
-// сОЗДАТЬ ФУНКЦИЮ makeElement (tagName, className)
+// создание нового HTML элемента
 
 function makeElement (tagName, className) {
-  const newImg = document.createElement(tagName);
-  newImg.classList.add(className);
-  return newImg;
+  const newElement = document.createElement(tagName);
+  newElement.classList.add(className);
+  return newElement;
 }
-
-// const kxamlds = makeElement('img', 'popup');
-
-// console.log(kxamlds);
 
 export {getRandomNumber, getRandomItem, getRandomValue, getRandomArray, makeElement};

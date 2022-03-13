@@ -1,9 +1,24 @@
-import {mockArray} from './create-mock-object.js';
+import {createMockObject} from './create-mock-object.js';
 import {makeElement} from './util.js';
+
+// Создание длины массива с объектами
+
+function createMockArray(amount) {
+  const array = [];
+
+  for (let i = 1; i <= amount; i++) {
+    array.push(createMockObject(i));
+  }
+
+  return array;
+}
+
+const mockArray = createMockArray(1);
+
+// код для генерации разметки похожих объявлений на основе данных
 
 const similarListElement = document.querySelector('.map__canvas');
 const similarCardTemplate = document.querySelector('#card').content.querySelector('.popup');
-
 const similarListFragment = document.createDocumentFragment();
 
 mockArray.forEach(({offer, author}) => {
@@ -15,29 +30,15 @@ mockArray.forEach(({offer, author}) => {
   cardElement.querySelector('.popup__text--address').textContent = offer.address;
   cardElement.querySelector('.popup__text--price').textContent = `${offer.price} ₽/ночь`;
 
-  let type = '';
-  switch(offer.type) {
-    case 'flat':
-      type = 'Квартира';
-      break;
-    case 'bungalow':
-      type = 'Бунгало';
-      break;
-    case 'house':
-      type = 'Дом';
-      break;
-    case 'palace':
-      type = 'Дворец';
-      break;
-    case 'hotel':
-      type = 'Отель';
-      break;
-    default:
-      type = 'Неизвестно';
-      break;
-  }
+  const typesMap = {
+    flat: 'Квартира',
+    bungalow: 'Бунгало',
+    house: 'Дом',
+    palace: 'Дворец',
+    hotel: 'Отель'
+  };
 
-  cardElement.querySelector('.popup__type').textContent = type;
+  cardElement.querySelector('.popup__type').textContent = typesMap[offer.type];
   cardElement.querySelector('.popup__text--capacity').textContent = `${offer.rooms} комнаты для ${offer.guests} гостей`;
   cardElement.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
   cardElement.querySelector('.popup__features').textContent = offer.features;
