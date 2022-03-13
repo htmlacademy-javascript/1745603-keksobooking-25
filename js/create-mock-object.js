@@ -43,4 +43,6 @@ function createMockArray(amount) {
   return array;
 }
 
-createMockArray(10);
+const mockArray = createMockArray(1);
+
+export {mockArray};
