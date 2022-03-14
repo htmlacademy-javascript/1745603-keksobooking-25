@@ -31,16 +31,4 @@ function createMockObject(imageNumber) {
   };
 }
 
-// Создание длины массива с объектами
-
-function createMockArray(amount) {
-  const array = [];
-
-  for (let i = 1; i <= amount; i++) {
-    array.push(createMockObject(i));
-  }
-
-  return array;
-}
-
-createMockArray(10);
+export {createMockObject};

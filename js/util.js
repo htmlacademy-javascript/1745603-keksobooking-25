@@ -38,4 +38,12 @@ function getRandomArray(array) {
   return [...new Set(arrayNew)];
 }
 
-export {getRandomNumber, getRandomItem, getRandomValue, getRandomArray};
+// создание нового HTML элемента
+
+function makeElement (tagName, className) {
+  const newElement = document.createElement(tagName);
+  newElement.classList.add(className);
+  return newElement;
+}
+
+export {getRandomNumber, getRandomItem, getRandomValue, getRandomArray, makeElement};
