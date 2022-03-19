@@ -27,6 +27,7 @@ const pristine = new Pristine(formNotis, {
   errorTextClass: 'ad-form__label',
 });
 
+
 // синхронизация поля «Количество комнат»  с полем «Количество мест»
 
 const roomsField = formNotis.querySelector('[name="rooms"]');
