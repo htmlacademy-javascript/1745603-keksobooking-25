@@ -5,4 +5,4 @@ import './card.js';
 import './form.js';
 import {changePageActitvity} from './form.js';
 
-changePageActitvity(false);
+changePageActitvity(true);
