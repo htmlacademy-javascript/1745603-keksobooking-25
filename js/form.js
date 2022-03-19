@@ -31,21 +31,27 @@ const pristine = new Pristine(formNotis, {
 
 const roomsField = formNotis.querySelector('[name="rooms"]');
 const capacityField = formNotis.querySelector('[name="capacity"]');
-const choiceOfRooms = {
-  '1': ['1'],
-  '2': ['2', '1'],
-  '3': ['3', '2', '1'],
-  '100': ['0']
-};
+
+function getQtyRooms (rooms) {
+  let i = 1;
+  const arr = [];
+  if (rooms >= 100){
+    arr.push('0');
+    return arr;
+  }
+  while(i <= rooms) {
+    arr.push(i.toString());
+    i++;
+  }
+  return arr;
+}
 
 function validateRooms () {
-  return choiceOfRooms[roomsField.value].includes(capacityField.value);
+  return getQtyRooms(roomsField.value).includes(capacityField.value);
 }
 
 function getCapacityErrorMessage () {
-  return `
-    ${'Кол-во гостей должно быть равное или меньше кол-ву комнат'}
-  `;
+  return 'Кол-во гостей должно быть равное или меньше кол-ву комнат';
 }
 
 pristine.addValidator(capacityField, validateRooms, getCapacityErrorMessage);
@@ -55,7 +61,11 @@ pristine.addValidator(capacityField, validateRooms, getCapacityErrorMessage);
 
 formNotis.addEventListener('submit', (evt) => {
   evt.preventDefault();
-  pristine.validate();
+  const isValid = pristine.validate();
+
+  if (!isValid) {
+    formNotis.querySelector('.ad-form__submit').disabled = true;
+  }
 });
 
 export{changePageActitvity};
