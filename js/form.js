@@ -58,7 +58,56 @@ function getCapacityErrorMessage () {
 pristine.addValidator(capacityField, validateRooms, getCapacityErrorMessage);
 
 
-// Проверка поля
+// Поле «Тип жилья»
+
+const priceField = formNotis.querySelector('#price');
+const typeField = formNotis.querySelector('#type');
+const minPrice = {
+  'bungalow': 0,
+  'flat': 1000,
+  'hotel': 3000,
+  'house': 5000,
+  'palace': 10000
+};
+
+function validateAmount () {
+  return minPrice[typeField.value] <= priceField.value;
+}
+
+function getAmountErrorMessage () {
+  return `минимальная цена за ночь ${minPrice[typeField.value]}`;
+}
+
+pristine.addValidator(priceField, validateAmount, getAmountErrorMessage);
+
+// Синхронизация полей «Время заезда» и «Время выезда»
+
+const timeinField = formNotis.querySelector('#timein');
+const timeoutField = formNotis.querySelector('#timeout');
+
+timeinField.addEventListener('change', () => {
+  switch(timeinField.value) {
+    case '12:00' :
+      timeoutField.value = timeinField.value; break;
+    case '13:00' :
+      timeoutField.value = timeinField.value; break;
+    case '14:00' :
+      timeoutField.value = timeinField.value; break;
+  }
+});
+
+timeoutField.addEventListener('change', () => {
+  switch(timeoutField.value) {
+    case '12:00' :
+      timeinField.value = timeoutField.value; break;
+    case '13:00' :
+      timeinField.value = timeoutField.value; break;
+    case '14:00' :
+      timeinField.value = timeoutField.value; break;
+  }
+});
+
+// Проверка всей формы
 
 formNotis.addEventListener('submit', (evt) => {
   evt.preventDefault();
