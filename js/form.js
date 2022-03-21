@@ -86,25 +86,11 @@ const timeinField = formNotis.querySelector('#timein');
 const timeoutField = formNotis.querySelector('#timeout');
 
 timeinField.addEventListener('change', () => {
-  switch(timeinField.value) {
-    case '12:00' :
-      timeoutField.value = timeinField.value; break;
-    case '13:00' :
-      timeoutField.value = timeinField.value; break;
-    case '14:00' :
-      timeoutField.value = timeinField.value; break;
-  }
+  timeoutField.value = timeinField.value;
 });
 
 timeoutField.addEventListener('change', () => {
-  switch(timeoutField.value) {
-    case '12:00' :
-      timeinField.value = timeoutField.value; break;
-    case '13:00' :
-      timeinField.value = timeoutField.value; break;
-    case '14:00' :
-      timeinField.value = timeoutField.value; break;
-  }
+  timeinField.value = timeoutField.value;
 });
 
 // Проверка всей формы
