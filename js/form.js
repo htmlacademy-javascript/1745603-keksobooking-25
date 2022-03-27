@@ -27,7 +27,6 @@ const pristine = new Pristine(formNotis, {
   errorTextClass: 'ad-form__label',
 });
 
-
 // синхронизация поля «Количество комнат»  с полем «Количество мест»
 
 const roomsField = formNotis.querySelector('[name="rooms"]');
@@ -102,6 +101,51 @@ formNotis.addEventListener('submit', (evt) => {
   if (!isValid) {
     formNotis.querySelector('.ad-form__submit').disabled = true;
   }
+});
+
+// Слайдер для поля с ценной
+
+const sliderElement = document.querySelector('.ad-form__slider');
+const fieldPrice = document.querySelector('#price');
+
+fieldPrice.value = 5000;
+
+noUiSlider.create(sliderElement, {
+  range: {
+    min: minPrice[typeField.value],
+    max: 100000,
+  },
+  start: 0,
+  step: 1,
+  connect: 'lower',
+  format: {
+    to: function (value) {
+      if (Number.isInteger(value)) {
+        return value.toFixed(0);
+      }
+      return value.toFixed(0);
+    },
+    from: function (value) {
+      return parseFloat(value);
+    },
+  },
+});
+
+sliderElement.noUiSlider.on('update', () => {
+  fieldPrice.value = sliderElement.noUiSlider.get();
+});
+
+typeField.addEventListener('change', (evt) => {
+  evt.preventDefault();
+  sliderElement.noUiSlider.updateOptions({
+    range: {
+      min: minPrice[typeField.value],
+      max: 100000
+    },
+    start: 1000,
+    step: 1
+  });
+  sliderElement.noUiSlider.set(evt.target.selected);
 });
 
 export{changePageActitvity};

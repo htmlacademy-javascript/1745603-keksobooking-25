@@ -13,7 +13,7 @@ function createMockArray(amount) {
   return array;
 }
 
-const mockArray = createMockArray(1);
+const mockArray = createMockArray(5);
 
 // код для генерации разметки похожих объявлений на основе данных
 
@@ -59,3 +59,5 @@ mockArray.forEach(({offer, author}) => {
 });
 
 similarListElement.appendChild(similarListFragment);
+
+export {mockArray};
