@@ -1,15 +1,17 @@
-import {mockArray} from './card.js';
+import {createMockArray} from './card.js';
 import {makeElement} from './util.js';
 
 // Главная метка на карте
+const mockArray = createMockArray(5);
+const defaultPoint = {
+  lat: 35.686726,
+  lng: 139.741936,
+};
 
 const resetButton = document.querySelector('.ad-form__reset');
 
 const map = L.map('map-canvas')
-  .setView({
-    lat: 35.686726,
-    lng: 139.741936,
-  }, 8);
+  .setView(defaultPoint, 8);
 
 const mainPinIcon = L.icon({
   iconUrl: './img/main-pin.svg',
@@ -18,10 +20,7 @@ const mainPinIcon = L.icon({
 });
 
 const mainPinMarker = L.marker(
-  {
-    lat: 35.686726,
-    lng: 139.741936,
-  },
+  defaultPoint,
   {
     draggable: true,
     icon: mainPinIcon,
@@ -31,20 +30,16 @@ const mainPinMarker = L.marker(
 mainPinMarker.addTo(map);
 
 resetButton.addEventListener('click', () => {
-  mainPinMarker.setLatLng({
-    lat: 35.686726,
-    lng: 139.741936,
-  });
+  mainPinMarker.setLatLng(defaultPoint);
 
-  map.setView({
-    lat: 35.686726,
-    lng: 139.741936,
-  }, 8);
+  map.setView(defaultPoint, 8);
 });
+
+const fieldAddress = document.querySelector('#address');
+fieldAddress.value = `${defaultPoint.lat.toFixed(5)}, ${defaultPoint.lng.toFixed(5)}`;
 
 mainPinMarker.on('moveend', (evt) => {
   const {lat, lng} = evt.target.getLatLng();
-  const fieldAddress = document.querySelector('#address');
   fieldAddress.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 });
 

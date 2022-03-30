@@ -60,4 +60,5 @@ mockArray.forEach(({offer, author}) => {
 
 similarListElement.appendChild(similarListFragment);
 
-export {mockArray};
+export {createMockArray};
+
