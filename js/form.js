@@ -1,4 +1,6 @@
+import {sendData} from './api.js';
 const formNotis = document.querySelector('.ad-form');
+const main = document.querySelector('main');
 
 // Активное/неактивное состояние страницы
 
@@ -92,17 +94,6 @@ timeoutField.addEventListener('change', () => {
   timeinField.value = timeoutField.value;
 });
 
-// Проверка всей формы
-
-formNotis.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  const isValid = pristine.validate();
-
-  if (!isValid) {
-    formNotis.querySelector('.ad-form__submit').disabled = true;
-  }
-});
-
 // Слайдер для поля с ценной
 
 const sliderElement = document.querySelector('.ad-form__slider');
@@ -137,6 +128,7 @@ sliderElement.noUiSlider.on('update', () => {
 
 typeField.addEventListener('change', (evt) => {
   evt.preventDefault();
+
   sliderElement.noUiSlider.updateOptions({
     range: {
       min: minPrice[typeField.value],
@@ -146,6 +138,63 @@ typeField.addEventListener('change', (evt) => {
     step: 1
   });
   sliderElement.noUiSlider.set(evt.target.selected);
+});
+
+// Сброс введеных данных после отправки формы
+
+// const formReset = () => {
+//   formNotis.reset();
+// }
+
+// Сообщения об успешной или не очень отправки формы
+
+const templateSuccess = document.querySelector('#success').content.querySelector('.success');
+const templateError = document.querySelector('#error').content.querySelector('.error');
+
+const openMessage = (messageTemplate) => {
+  const element = messageTemplate.cloneNode(true);
+  element.style.zIndex = 30000;
+
+  main.addEventListener('click', () => {
+    element.style.display = 'none';
+  });
+
+  window.addEventListener('keydown', (evt) => {
+    if (evt.keyCode === 27) {
+      element.style.display = 'none';
+    }
+  }, true);
+
+  main.append(element);
+};
+
+const messageSuccess = () => openMessage(templateSuccess);
+const messageError = () => openMessage(templateError);
+
+// Проверка всей формы
+
+
+formNotis.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+
+  if (isValid) {
+    const formData = new FormData(evt.target);
+    sendData(
+      () => {
+        messageSuccess();
+        formNotis.reset();},
+      () => {
+        // console.log('...!!!!');
+        messageError();},
+      formData
+    );
+
+    // console.log('Можно отправлять');
+  } else {
+    // console.log('He oтправлять');
+    formNotis.querySelector('.ad-form__submit').disabled = true;
+  }
 });
 
 export{changePageActitvity};
