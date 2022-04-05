@@ -1,4 +1,5 @@
 import {makeElement} from './util.js';
+import {getData} from './api.js';
 
 const MAXCARDS = 10;
 
@@ -100,24 +101,22 @@ const createCustomPopup = ({offer, author}) => {
 
 const markerGroup = L.layerGroup().addTo(map);
 
-fetch('https://25.javascript.pages.academy/keksobooking/data')
-  .then((response) => response.json())
-  .then((cards) => {
-    cards
-      .slice(0, MAXCARDS)
-      .forEach((point) => {
-        const {lat, lng} = point.location;
-        const marker = L.marker(
-          {
-            lat,
-            lng,
-          },
-          {
-            icon,
-          },
-        );
-        marker
-          .addTo(markerGroup)
-          .bindPopup(createCustomPopup(point));
-      });
-  });
+getData((cards) => {
+  cards
+    .slice(0, MAXCARDS)
+    .forEach((point) => {
+      const {lat, lng} = point.location;
+      const marker = L.marker(
+        {
+          lat,
+          lng,
+        },
+        {
+          icon,
+        },
+      );
+      marker
+        .addTo(markerGroup)
+        .bindPopup(createCustomPopup(point));
+    });
+});

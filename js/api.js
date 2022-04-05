@@ -1,3 +1,11 @@
+const getData = (onSuccess) => {
+  fetch('https://25.javascript.pages.academy/keksobooking/data')
+    .then((response) => response.json())
+    .then((cards) => {
+      onSuccess(cards);
+    });
+};
+
 const sendData = (onSuccess, onFail, body) => {
   fetch(
     'https://25.javascript.pages.academy/keksobooking',
@@ -18,4 +26,4 @@ const sendData = (onSuccess, onFail, body) => {
     });
 };
 
-export {sendData};
+export {getData, sendData};

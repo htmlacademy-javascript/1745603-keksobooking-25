@@ -140,12 +140,6 @@ typeField.addEventListener('change', (evt) => {
   sliderElement.noUiSlider.set(evt.target.selected);
 });
 
-// Сброс введеных данных после отправки формы
-
-// const formReset = () => {
-//   formNotis.reset();
-// }
-
 // Сообщения об успешной или не очень отправки формы
 
 const templateSuccess = document.querySelector('#success').content.querySelector('.success');
@@ -185,7 +179,7 @@ formNotis.addEventListener('submit', (evt) => {
         messageSuccess();
         formNotis.reset();},
       () => {
-        // console.log('...!!!!');
+        // console.log('.Error..!!!!');
         messageError();},
       formData
     );
