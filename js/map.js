@@ -1,8 +1,9 @@
-import {createMockArray} from './card.js';
 import {makeElement} from './util.js';
+import {getData} from './api.js';
+
+const MAXCARDS = 10;
 
 // Главная метка на карте
-const mockArray = createMockArray(5);
 const defaultPoint = {
   lat: 35.686726,
   lng: 139.741936,
@@ -11,7 +12,7 @@ const defaultPoint = {
 const resetButton = document.querySelector('.ad-form__reset');
 
 const map = L.map('map-canvas')
-  .setView(defaultPoint, 8);
+  .setView(defaultPoint, 12);
 
 const mainPinIcon = L.icon({
   iconUrl: './img/main-pin.svg',
@@ -32,7 +33,7 @@ mainPinMarker.addTo(map);
 resetButton.addEventListener('click', () => {
   mainPinMarker.setLatLng(defaultPoint);
 
-  map.setView(defaultPoint, 8);
+  map.setView(defaultPoint, 12);
 });
 
 const fieldAddress = document.querySelector('#address');
@@ -83,34 +84,39 @@ const createCustomPopup = ({offer, author}) => {
   popupElement.querySelector('.popup__description').textContent = offer.description;
   popupElement.querySelector('.popup__avatar').src = author.avatar;
 
-  offer.photos.forEach((elem) => {
-    const photo = makeElement('img', 'popup__photo');
-    photo.width = 45;
-    photo.height = 40;
-    photo.alt = 'Фотография жилья';
-    photo.src = elem;
+  if (offer.photos) {
+    offer.photos.forEach((elem) => {
+      const photo = makeElement('img', 'popup__photo');
+      photo.width = 45;
+      photo.height = 40;
+      photo.alt = 'Фотография жилья';
+      photo.src = elem;
 
-    popupPhoto.appendChild(photo);
-  });
+      popupPhoto.appendChild(photo);
+    });
+  }
 
   return popupElement;
 };
 
 const markerGroup = L.layerGroup().addTo(map);
 
-mockArray.forEach((point) => {
-  const {lat, lng} = point.location;
-  const marker = L.marker(
-    {
-      lat,
-      lng,
-    },
-    {
-      icon,
-    },
-  );
-
-  marker
-    .addTo(markerGroup)
-    .bindPopup(createCustomPopup(point));
+getData((cards) => {
+  cards
+    .slice(0, MAXCARDS)
+    .forEach((point) => {
+      const {lat, lng} = point.location;
+      const marker = L.marker(
+        {
+          lat,
+          lng,
+        },
+        {
+          icon,
+        },
+      );
+      marker
+        .addTo(markerGroup)
+        .bindPopup(createCustomPopup(point));
+    });
 });
