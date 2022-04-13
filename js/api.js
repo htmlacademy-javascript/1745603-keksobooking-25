@@ -1,8 +1,15 @@
+import { showAlert } from './util.js';
+
 const getData = (onSuccess) => {
   fetch('https://25.javascript.pages.academy/keksobooking/data')
     .then((response) => response.json())
     .then((cards) => {
       onSuccess(cards);
+    })
+    .catch((response) => {
+      if(!response.ok) {
+        showAlert('Не удалось получить данные');
+      }
     });
 };
 
