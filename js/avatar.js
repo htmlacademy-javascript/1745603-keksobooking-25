@@ -1,5 +1,7 @@
 const fileChooserAvatar = document.querySelector('.ad-form__field input[type=file]');
 const previewAvatar = document.querySelector('.ad-form-header__preview img');
+const fileChooserPhoto = document.querySelector('.ad-form__upload input[type=file]');
+const previewHousingPhoto = document.querySelector('.ad-form__photo');
 const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
 fileChooserAvatar.addEventListener('change', () => {
@@ -12,9 +14,6 @@ fileChooserAvatar.addEventListener('change', () => {
     previewAvatar.src = URL.createObjectURL(file);
   }
 });
-
-const fileChooserPhoto = document.querySelector('.ad-form__upload input[type=file]');
-const previewHousingPhoto = document.querySelector('.ad-form__photo');
 
 fileChooserPhoto.addEventListener('change', () => {
   const photo =  document.createElement('img');

@@ -99,8 +99,6 @@ timeoutField.addEventListener('change', () => {
 const sliderElement = document.querySelector('.ad-form__slider');
 const fieldPrice = document.querySelector('#price');
 
-fieldPrice.value = 5000;
-
 noUiSlider.create(sliderElement, {
   range: {
     min: minPrice[typeField.value],

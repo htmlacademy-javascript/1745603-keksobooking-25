@@ -1,5 +1,7 @@
 import { map } from './map.js';
 
+const MIN_PRICE = 10000;
+const MAX_PRICE = 50000;
 const type = document.querySelector('#housing-type');
 const price = document.querySelector('#housing-price');
 const rooms = document.querySelector('#housing-rooms');
@@ -15,35 +17,31 @@ filterElements.forEach((el) => {
   });
 });
 
-const MIN_PRICE = 10000;
-const MAX_PRICE = 50000;
+const filterType = (element) => type.value !== 'any' ? element.offer.type === type.value : true;
+const filterRooms = (element) => rooms.value !== 'any' ? element.offer.rooms === Number(rooms.value) : true;
+const filterGuests = (element) => guests.value !== 'any' ? element.offer.guests === Number(guests.value) : true;
 
-const filterType = (a) => type.value !== 'any' ? a.offer.type === type.value : true;
-const filterRooms = (a) => rooms.value !== 'any' ? a.offer.rooms === Number(rooms.value) : true;
-const filterGuests = (a) => guests.value !== 'any' ? a.offer.guests === Number(guests.value) : true;
-
-const filterPrice = (a) => {
-
+const filterPrice = (element) => {
   switch (price.value) {
     case 'middle':
-      return a.offer.price > MIN_PRICE && a.offer.price < MAX_PRICE;
+      return element.offer.price > MIN_PRICE && element.offer.price < MAX_PRICE;
     case 'low':
-      return a.offer.price < MIN_PRICE;
+      return element.offer.price < MIN_PRICE;
     case 'hight':
-      return a.offer.price > MAX_PRICE;
+      return element.offer.price > MAX_PRICE;
     case 'any':
       return true;
   }
 };
 
-const filterFeatures = (a) => {
+const filterFeatures = (element) => {
   const checkedVal = features.querySelectorAll('.map__checkbox:checked');
-  if (!a.offer.features) {
+  if (!element.offer.features) {
     return false;
   }
 
   for (const elem of checkedVal) {
-    if(!a.offer.features.includes(elem.value)) {
+    if(!element.offer.features.includes(elem.value)) {
       return false;
     }
   }
