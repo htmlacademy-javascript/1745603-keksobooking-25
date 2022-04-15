@@ -1,6 +1,6 @@
 import {makeElement} from './util.js';
 import {getData} from './api.js';
-import {filterElements, filterRules} from './map-filters.js';
+import {filterRules} from './map-filters.js';
 
 const MAXCARDS = 10;
 
@@ -61,16 +61,14 @@ const createCustomPopup = ({offer, author}) => {
   const popupElement = balloonTemplate.cloneNode(true);
   const popupPhoto = popupElement.querySelector('.popup__photos');
   popupPhoto.innerHTML = '';
-  const popupFeatures = popupElement.querySelector('.popup__features');
-  popupFeatures.innerHTML = '';
+  const popupFeatures = popupElement.querySelectorAll('.popup__features li');
 
-  if (offer.features) {
-    offer.features.forEach((el) => {
-      const li = makeElement('li', 'popup__feature');
-      li.classList.add(`popup__feature--${el}`);
-      popupFeatures.appendChild(li);
-    });
-  }
+  popupFeatures.forEach((el) => {
+    const feature = el.classList[1].split('popup__feature--')[1];
+    if(offer.features && offer.features.includes(feature)) {
+      el.remove();
+    }
+  });
 
   popupElement.querySelector('.popup__title').textContent = offer.title;
   popupElement.querySelector('.popup__text--address').textContent = offer.address;
@@ -135,11 +133,32 @@ const renderMarkers = (element) => {
   mapMarkers.push(marker);
 };
 
+const form = document.querySelector('.map__filters');
+
 let data;
+
+const changeHandler = (arr) => {
+  form.addEventListener('change', () => {
+    for (let i = 0; i < mapMarkers.length; i++) {
+      map.removeLayer(mapMarkers[i]);
+    }
+
+    arr
+      .slice()
+      .filter(filterRules)
+      .slice(0, MAXCARDS)
+      .forEach((point) =>
+      {
+        setTimeout(() => {
+          renderMarkers(point);
+        }, 500);
+      }
+      );
+  });
+};
 
 getData((cards) => {
   cards
-    .slice()
     .slice(0, MAXCARDS)
     .forEach((point) => {
       renderMarkers(point);
@@ -147,25 +166,7 @@ getData((cards) => {
 
   data = [...cards];
 
-  filterElements.forEach((el) => {
-    el.addEventListener('change', () => {
-      for (let i = 0; i < mapMarkers.length; i++) {
-        map.removeLayer(mapMarkers[i]);
-      }
-
-      data
-        .slice()
-        .filter(filterRules)
-        .slice(0, MAXCARDS)
-        .forEach((point) =>
-        {
-          setTimeout(() => {
-            renderMarkers(point);
-          }, 500);
-        }
-        );
-    });
-  });
+  changeHandler(data);
 
 });
 
