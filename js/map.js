@@ -78,9 +78,7 @@ const createCustomPopup = ({offer, author}) => {
 
   popupFeatures.forEach((el) => {
     const feature = el.classList[1].split('popup__feature--')[1];
-    if(offer.features && offer.features.includes(feature)) {
-      el.remove();
-    } else {
+    if((offer.features && !offer.features.includes(feature)) || !offer.features) {
       el.remove();
     }
   });
