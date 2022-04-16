@@ -18,8 +18,8 @@ fileChooserAvatar.addEventListener('change', () => {
 fileChooserPhoto.addEventListener('change', () => {
   const photo =  document.createElement('img');
   photo.alt = 'Фотография жилья';
-  photo.width = 60;
-  photo.height = 60;
+  photo.width = 70;
+  photo.height = 70;
   previewHousingPhoto.appendChild(photo);
 
   const file = fileChooserPhoto.files[0];
