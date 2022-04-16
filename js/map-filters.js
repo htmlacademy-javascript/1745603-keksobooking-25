@@ -1,4 +1,4 @@
-import { map } from './map.js';
+import {map} from './map.js';
 
 const MIN_PRICE = 10000;
 const MAX_PRICE = 50000;
@@ -13,7 +13,6 @@ const filterElements = [type, price, rooms, guests, features];
 filterElements.forEach((el) => {
   el.addEventListener('change', () => {
     map.closePopup();
-
   });
 });
 
