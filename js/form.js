@@ -1,6 +1,24 @@
 import {sendData} from './api.js';
+
 const formNotis = document.querySelector('.ad-form');
 const main = document.querySelector('main');
+const roomsField = formNotis.querySelector('[name="rooms"]');
+const capacityField = formNotis.querySelector('[name="capacity"]');
+const priceField = formNotis.querySelector('#price');
+const typeField = formNotis.querySelector('#type');
+const minPrice = {
+  'bungalow': 0,
+  'flat': 1000,
+  'hotel': 3000,
+  'house': 5000,
+  'palace': 10000
+};
+const timeinField = formNotis.querySelector('#timein');
+const timeoutField = formNotis.querySelector('#timeout');
+const sliderElement = document.querySelector('.ad-form__slider');
+const fieldPrice = document.querySelector('#price');
+const templateSuccess = document.querySelector('#success').content.querySelector('.success');
+const templateError = document.querySelector('#error').content.querySelector('.error');
 
 // Активное/неактивное состояние страницы
 
@@ -21,6 +39,8 @@ function changePageActitvity(changeToActive) {
   });
 }
 
+changePageActitvity(false);
+
 // Валидация формы
 
 const pristine = new Pristine(formNotis, {
@@ -30,9 +50,6 @@ const pristine = new Pristine(formNotis, {
 });
 
 // синхронизация поля «Количество комнат»  с полем «Количество мест»
-
-const roomsField = formNotis.querySelector('[name="rooms"]');
-const capacityField = formNotis.querySelector('[name="capacity"]');
 
 function getQtyRooms (rooms) {
   let i = 1;
@@ -61,16 +78,6 @@ pristine.addValidator(capacityField, validateRooms, getCapacityErrorMessage);
 
 // Поле «Тип жилья»
 
-const priceField = formNotis.querySelector('#price');
-const typeField = formNotis.querySelector('#type');
-const minPrice = {
-  'bungalow': 0,
-  'flat': 1000,
-  'hotel': 3000,
-  'house': 5000,
-  'palace': 10000
-};
-
 function validateAmount () {
   return minPrice[typeField.value] <= priceField.value;
 }
@@ -83,9 +90,6 @@ pristine.addValidator(priceField, validateAmount, getAmountErrorMessage);
 
 // Синхронизация полей «Время заезда» и «Время выезда»
 
-const timeinField = formNotis.querySelector('#timein');
-const timeoutField = formNotis.querySelector('#timeout');
-
 timeinField.addEventListener('change', () => {
   timeoutField.value = timeinField.value;
 });
@@ -95,9 +99,6 @@ timeoutField.addEventListener('change', () => {
 });
 
 // Слайдер для поля с ценной
-
-const sliderElement = document.querySelector('.ad-form__slider');
-const fieldPrice = document.querySelector('#price');
 
 noUiSlider.create(sliderElement, {
   range: {
@@ -140,9 +141,6 @@ typeField.addEventListener('change', (evt) => {
 
 // Сообщения об успешной или не очень отправки формы
 
-const templateSuccess = document.querySelector('#success').content.querySelector('.success');
-const templateError = document.querySelector('#error').content.querySelector('.error');
-
 const openMessage = (messageTemplate) => {
   const element = messageTemplate.cloneNode(true);
   element.style.zIndex = 30000;
@@ -177,14 +175,11 @@ formNotis.addEventListener('submit', (evt) => {
         messageSuccess();
         formNotis.reset();},
       () => {
-        // console.log('.Error..!!!!');
         messageError();},
       formData
     );
 
-    // console.log('Можно отправлять');
   } else {
-    // console.log('He oтправлять');
     formNotis.querySelector('.ad-form__submit').disabled = true;
   }
 });

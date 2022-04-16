@@ -1,8 +1,13 @@
 import {makeElement} from './util.js';
 import {getData} from './api.js';
 import {filterRules} from './map-filters.js';
+import {changePageActitvity} from './form.js';
 
 const MAXCARDS = 10;
+const resetButton = document.querySelector('.ad-form__reset');
+const fieldAddress = document.querySelector('#address');
+const form = document.querySelector('.map__filters');
+const mapMarkers = [];
 
 // Главная метка на карте
 const defaultPoint = {
@@ -10,23 +15,22 @@ const defaultPoint = {
   lng: 139.741936,
 };
 
-const resetButton = document.querySelector('.ad-form__reset');
-
 const L = window.L;
 const map = L.map('map-canvas')
   .setView(defaultPoint, 12);
 
-const fieldAddress = document.querySelector('#address');
 fieldAddress.value = `${defaultPoint.lat.toFixed(5)}, ${defaultPoint.lng.toFixed(5)}`;
 
 // Метки похожих объявлений
 
-L.tileLayer(
+const mapLayer = L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>',
   },
 ).addTo(map);
+
+mapLayer.on('load', () => changePageActitvity(true));
 
 const mainPinIcon = L.icon({
   iconUrl: './img/main-pin.svg',
@@ -56,24 +60,14 @@ resetButton.addEventListener('click', () => {
   map.setView(defaultPoint, 9);
 });
 
+// Создание объявления
+
 const createCustomPopup = ({offer, author}) => {
   const balloonTemplate = document.querySelector('#card').content.querySelector('.popup');
   const popupElement = balloonTemplate.cloneNode(true);
   const popupPhoto = popupElement.querySelector('.popup__photos');
   popupPhoto.innerHTML = '';
   const popupFeatures = popupElement.querySelectorAll('.popup__features li');
-
-  popupFeatures.forEach((el) => {
-    const feature = el.classList[1].split('popup__feature--')[1];
-    if(offer.features && offer.features.includes(feature)) {
-      el.remove();
-    }
-  });
-
-  popupElement.querySelector('.popup__title').textContent = offer.title;
-  popupElement.querySelector('.popup__text--address').textContent = offer.address;
-  popupElement.querySelector('.popup__text--price').textContent = `${offer.price} ₽/ночь`;
-
   const typesMap = {
     flat: 'Квартира',
     bungalow: 'Бунгало',
@@ -82,6 +76,18 @@ const createCustomPopup = ({offer, author}) => {
     hotel: 'Отель'
   };
 
+  popupFeatures.forEach((el) => {
+    const feature = el.classList[1].split('popup__feature--')[1];
+    if(offer.features && offer.features.includes(feature)) {
+      el.remove();
+    } else {
+      el.remove();
+    }
+  });
+
+  popupElement.querySelector('.popup__title').textContent = offer.title;
+  popupElement.querySelector('.popup__text--address').textContent = offer.address;
+  popupElement.querySelector('.popup__text--price').textContent = `${offer.price} ₽/ночь`;
   popupElement.querySelector('.popup__type').textContent = typesMap[offer.type];
   popupElement.querySelector('.popup__text--capacity').textContent = `${offer.rooms} комнаты для ${offer.guests} гостей`;
   popupElement.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
@@ -103,8 +109,6 @@ const createCustomPopup = ({offer, author}) => {
 };
 
 const markerGroup = L.layerGroup().addTo(map);
-
-const mapMarkers = [];
 
 const renderMarkers = (element) => {
   const {lat, lng} = element.location;
@@ -132,8 +136,6 @@ const renderMarkers = (element) => {
     );
   mapMarkers.push(marker);
 };
-
-const form = document.querySelector('.map__filters');
 
 let data;
 

@@ -1,3 +1,5 @@
+const ALERT_SHOW_TIME = 5000;
+
 // Получение рандомного числа
 
 function getRandomNumber (minValue, maxValue) {
@@ -47,7 +49,6 @@ function makeElement (tagName, className) {
 }
 
 // Показ сообщения об ошибке при отправке неверной формы
-const ALERT_SHOW_TIME = 5000;
 
 const showAlert = (message) => {
   const alertContainer = document.createElement('div');
