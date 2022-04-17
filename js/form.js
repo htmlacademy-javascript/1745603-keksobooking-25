@@ -1,11 +1,19 @@
 import {sendData} from './api.js';
+import { mainPinMarker, defaultPoint, map } from './map.js';
 
-const formNotis = document.querySelector('.ad-form');
-const main = document.querySelector('main');
-const roomsField = formNotis.querySelector('[name="rooms"]');
-const capacityField = formNotis.querySelector('[name="capacity"]');
-const priceField = formNotis.querySelector('#price');
-const typeField = formNotis.querySelector('#type');
+const formNotisElement = document.querySelector('.ad-form');
+const mainElement = document.querySelector('main');
+const roomsFieldElement = formNotisElement.querySelector('[name="rooms"]');
+const capacityFieldElement = formNotisElement.querySelector('[name="capacity"]');
+const priceFieldElement = formNotisElement.querySelector('#price');
+const typeFieldElement = formNotisElement.querySelector('#type');
+const timeinFieldElement = formNotisElement.querySelector('#timein');
+const timeoutFieldElement = formNotisElement.querySelector('#timeout');
+const sliderElement = document.querySelector('.ad-form__slider');
+const fieldPriceElement = document.querySelector('#price');
+const templateSuccessElement = document.querySelector('#success').content.querySelector('.success');
+const templateErrorElement = document.querySelector('#error').content.querySelector('.error');
+const resetButtonElement = document.querySelector('.ad-form__reset');
 const minPrice = {
   'bungalow': 0,
   'flat': 1000,
@@ -13,37 +21,31 @@ const minPrice = {
   'house': 5000,
   'palace': 10000
 };
-const timeinField = formNotis.querySelector('#timein');
-const timeoutField = formNotis.querySelector('#timeout');
-const sliderElement = document.querySelector('.ad-form__slider');
-const fieldPrice = document.querySelector('#price');
-const templateSuccess = document.querySelector('#success').content.querySelector('.success');
-const templateError = document.querySelector('#error').content.querySelector('.error');
 
 // Активное/неактивное состояние страницы
 
-function changePageActitvity(changeToActive) {
-  const fieldFormHeader = document.querySelectorAll('fieldset');
-  const mapFilters = document.querySelector('.map__filters');
-  const arrSelect = mapFilters.querySelectorAll('select');
+const changePageActitvity = (changeToActive) => {
+  const fieldFormHeaderElement = document.querySelectorAll('fieldset');
+  const mapFiltersElement = document.querySelector('.map__filters');
+  const arrSelectElement = mapFiltersElement.querySelectorAll('select');
 
-  formNotis.classList[changeToActive ? 'add' : 'remove']('.ad-form--disabled');
-  mapFilters.classList[changeToActive ? 'add' : 'remove']('.map__filters--disabled');
+  formNotisElement.classList[changeToActive ? 'add' : 'remove']('.ad-form--disabled');
+  mapFiltersElement.classList[changeToActive ? 'add' : 'remove']('.map__filters--disabled');
 
-  fieldFormHeader.forEach((element) => {
+  fieldFormHeaderElement.forEach((element) => {
     element.disabled = !changeToActive;
   });
 
-  arrSelect.forEach((element) => {
+  arrSelectElement.forEach((element) => {
     element.disabled = !changeToActive;
   });
-}
+};
 
 changePageActitvity(false);
 
 // Валидация формы
 
-const pristine = new Pristine(formNotis, {
+const pristine = new Pristine(formNotisElement, {
   classTo: 'ad-form__element',
   errorTextParent: 'ad-form__element',
   errorTextClass: 'ad-form__label',
@@ -51,7 +53,7 @@ const pristine = new Pristine(formNotis, {
 
 // синхронизация поля «Количество комнат»  с полем «Количество мест»
 
-function getQtyRooms (rooms) {
+const getQtyRooms = (rooms) => {
   let i = 1;
   const arr = [];
   if (rooms >= 100){
@@ -63,74 +65,64 @@ function getQtyRooms (rooms) {
     i++;
   }
   return arr;
-}
+};
 
-function validateRooms () {
-  return getQtyRooms(roomsField.value).includes(capacityField.value);
-}
+const validateRooms = () => getQtyRooms(roomsFieldElement.value).includes(capacityFieldElement.value);
 
-function getCapacityErrorMessage () {
-  return 'Кол-во гостей должно быть равное или меньше кол-ву комнат';
-}
+const getCapacityErrorMessage = () => 'Кол-во гостей должно быть равное или меньше кол-ву комнат';
 
-pristine.addValidator(capacityField, validateRooms, getCapacityErrorMessage);
+pristine.addValidator(capacityFieldElement, validateRooms, getCapacityErrorMessage);
 
 
 // Поле «Тип жилья»
 
-function validateAmount () {
-  return minPrice[typeField.value] <= priceField.value;
-}
+const validateAmount = () => minPrice[typeFieldElement.value] <= priceFieldElement.value;
 
-function getAmountErrorMessage () {
-  return `минимальная цена за ночь ${minPrice[typeField.value]}`;
-}
+const getAmountErrorMessage = () => `минимальная цена за ночь ${minPrice[typeFieldElement.value]}`;
 
-pristine.addValidator(priceField, validateAmount, getAmountErrorMessage);
+pristine.addValidator(priceFieldElement, validateAmount, getAmountErrorMessage);
 
 // Синхронизация полей «Время заезда» и «Время выезда»
 
-timeinField.addEventListener('change', () => {
-  timeoutField.value = timeinField.value;
+timeinFieldElement.addEventListener('change', () => {
+  timeoutFieldElement.value = timeinFieldElement.value;
 });
 
-timeoutField.addEventListener('change', () => {
-  timeinField.value = timeoutField.value;
+timeoutFieldElement.addEventListener('change', () => {
+  timeinFieldElement.value = timeoutFieldElement.value;
 });
 
 // Слайдер для поля с ценной
 
 noUiSlider.create(sliderElement, {
   range: {
-    min: minPrice[typeField.value],
+    min: minPrice[typeFieldElement.value],
     max: 100000,
   },
   start: 0,
   step: 1,
   connect: 'lower',
   format: {
-    to: function (value) {
+    to: (value) => {
       if (Number.isInteger(value)) {
         return value.toFixed(0);
       }
       return value.toFixed(0);
     },
-    from: function (value) {
-      return parseFloat(value);
-    },
+    from: (value) => parseFloat(value),
   },
 });
 
 sliderElement.noUiSlider.on('update', () => {
-  fieldPrice.value = sliderElement.noUiSlider.get();
+  fieldPriceElement.value = sliderElement.noUiSlider.get();
 });
 
-typeField.addEventListener('change', (evt) => {
+typeFieldElement.addEventListener('change', (evt) => {
   evt.preventDefault();
 
   sliderElement.noUiSlider.updateOptions({
     range: {
-      min: minPrice[typeField.value],
+      min: minPrice[typeFieldElement.value],
       max: 100000
     },
     start: 1000,
@@ -145,7 +137,7 @@ const openMessage = (messageTemplate) => {
   const element = messageTemplate.cloneNode(true);
   element.style.zIndex = 30000;
 
-  main.addEventListener('click', () => {
+  mainElement.addEventListener('click', () => {
     element.style.display = 'none';
   });
 
@@ -155,16 +147,42 @@ const openMessage = (messageTemplate) => {
     }
   }, true);
 
-  main.append(element);
+  mainElement.append(element);
 };
 
-const messageSuccess = () => openMessage(templateSuccess);
-const messageError = () => openMessage(templateError);
+const messageSuccess = () => openMessage(templateSuccessElement);
+const messageError = () => openMessage(templateErrorElement);
+
+// Сброс введенных данных
+
+const formReset = () => {
+  formNotisElement.reset();
+
+  const housingPhotoElement = document.querySelector('.ad-form__photo img');
+  const previewImgElement = document.querySelector('.ad-form-header__preview img');
+  const fieldAddressElement = document.querySelector('#address');
+
+  mainPinMarker.setLatLng(defaultPoint);
+  map.setView(defaultPoint, 12);
+
+  previewImgElement.src = 'img/muffin-grey.svg';
+  sliderElement.noUiSlider.set(1000);
+  fieldAddressElement.value = `${defaultPoint.lat.toFixed(5)}, ${defaultPoint.lng.toFixed(5)}`;
+
+  if(housingPhotoElement) {
+    housingPhotoElement.remove();
+  }
+};
+
+resetButtonElement.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  formReset();
+});
 
 // Проверка всей формы
 
 
-formNotis.addEventListener('submit', (evt) => {
+formNotisElement.addEventListener('submit', (evt) => {
   evt.preventDefault();
   const isValid = pristine.validate();
 
@@ -173,14 +191,14 @@ formNotis.addEventListener('submit', (evt) => {
     sendData(
       () => {
         messageSuccess();
-        formNotis.reset();},
+        formReset();},
       () => {
         messageError();},
       formData
     );
 
   } else {
-    formNotis.querySelector('.ad-form__submit').disabled = true;
+    formNotisElement.querySelector('.ad-form__submit').disabled = true;
   }
 });
 
