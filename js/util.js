@@ -42,6 +42,4 @@ const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-// export {getRandomNumber, getRandomItem, getRandomValue, getRandomArray, makeElement, showAlert};
-
 export {getRandomNumber, getRandomItem, makeElement, showAlert};

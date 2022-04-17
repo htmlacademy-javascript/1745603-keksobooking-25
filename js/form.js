@@ -156,6 +156,8 @@ const messageError = () => openMessage(templateErrorElement);
 // Сброс введенных данных
 
 const formReset = () => {
+  formNotisElement.reset();
+
   const housingPhotoElement = document.querySelector('.ad-form__photo img');
   const previewImgElement = document.querySelector('.ad-form-header__preview img');
   const fieldAddressElement = document.querySelector('#address');
@@ -165,11 +167,15 @@ const formReset = () => {
 
   previewImgElement.src = 'img/muffin-grey.svg';
   sliderElement.noUiSlider.set(1000);
-  housingPhotoElement.remove('img');
   fieldAddressElement.value = `${defaultPoint.lat.toFixed(5)}, ${defaultPoint.lng.toFixed(5)}`;
+
+  if(housingPhotoElement) {
+    housingPhotoElement.remove();
+  }
 };
 
-resetButtonElement.addEventListener('click', () => {
+resetButtonElement.addEventListener('click', (evt) => {
+  evt.preventDefault();
   formReset();
 });
 
@@ -185,7 +191,6 @@ formNotisElement.addEventListener('submit', (evt) => {
     sendData(
       () => {
         messageSuccess();
-        formNotisElement.reset();
         formReset();},
       () => {
         messageError();},
@@ -197,5 +202,4 @@ formNotisElement.addEventListener('submit', (evt) => {
   }
 });
 
-// export{changePageActitvity, sliderElement};
 export{changePageActitvity};

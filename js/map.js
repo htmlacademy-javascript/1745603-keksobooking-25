@@ -2,10 +2,8 @@ import {makeElement} from './util.js';
 import {getData} from './api.js';
 import {filterRules} from './map-filters.js';
 import {changePageActitvity} from './form.js';
-// import {sliderElement} from './form.js';
 
 const MAXCARDS = 10;
-// const resetButtonElement = document.querySelector('.ad-form__reset');
 const fieldAddressElement = document.querySelector('#address');
 const formElement = document.querySelector('.map__filters');
 const mapMarkers = [];
@@ -54,18 +52,6 @@ mainPinMarker.on('moveend', (evt) => {
 });
 
 mainPinMarker.addTo(map);
-
-// resetButtonElement.addEventListener('click', () => {
-//   const housingPhotoElement = document.querySelector('.ad-form__photo img');
-//   const previewImgElement = document.querySelector('.ad-form-header__preview img');
-
-//   mainPinMarker.setLatLng(defaultPoint);
-//   map.setView(defaultPoint, 12);
-
-//   previewImgElement.src = 'img/muffin-grey.svg';
-//   sliderElement.noUiSlider.set(1000);
-//   housingPhotoElement.remove('img');
-// });
 
 // Создание объявления
 

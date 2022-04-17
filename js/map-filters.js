@@ -48,4 +48,5 @@ const filterFeatures = (element) => {
 };
 
 const filterRules = (el) => filterType(el) && filterRooms(el) && filterGuests(el) && filterPrice(el) && filterFeatures(el);
+
 export {filterElements, filterRules};
