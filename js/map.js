@@ -2,11 +2,12 @@ import {makeElement} from './util.js';
 import {getData} from './api.js';
 import {filterRules} from './map-filters.js';
 import {changePageActitvity} from './form.js';
+// import {sliderElement} from './form.js';
 
 const MAXCARDS = 10;
-const resetButton = document.querySelector('.ad-form__reset');
-const fieldAddress = document.querySelector('#address');
-const form = document.querySelector('.map__filters');
+// const resetButtonElement = document.querySelector('.ad-form__reset');
+const fieldAddressElement = document.querySelector('#address');
+const formElement = document.querySelector('.map__filters');
 const mapMarkers = [];
 
 // Главная метка на карте
@@ -19,7 +20,7 @@ const L = window.L;
 const map = L.map('map-canvas')
   .setView(defaultPoint, 12);
 
-fieldAddress.value = `${defaultPoint.lat.toFixed(5)}, ${defaultPoint.lng.toFixed(5)}`;
+fieldAddressElement.value = `${defaultPoint.lat.toFixed(5)}, ${defaultPoint.lng.toFixed(5)}`;
 
 // Метки похожих объявлений
 
@@ -49,24 +50,30 @@ const mainPinMarker = L.marker(
 mainPinMarker.on('moveend', (evt) => {
   map.closePopup();
   const {lat, lng} = evt.target.getLatLng();
-  fieldAddress.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+  fieldAddressElement.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 });
 
 mainPinMarker.addTo(map);
 
-resetButton.addEventListener('click', () => {
-  mainPinMarker.setLatLng(defaultPoint);
+// resetButtonElement.addEventListener('click', () => {
+//   const housingPhotoElement = document.querySelector('.ad-form__photo img');
+//   const previewImgElement = document.querySelector('.ad-form-header__preview img');
 
-  map.setView(defaultPoint, 9);
-});
+//   mainPinMarker.setLatLng(defaultPoint);
+//   map.setView(defaultPoint, 12);
+
+//   previewImgElement.src = 'img/muffin-grey.svg';
+//   sliderElement.noUiSlider.set(1000);
+//   housingPhotoElement.remove('img');
+// });
 
 // Создание объявления
 
 const createCustomPopup = ({offer, author}) => {
-  const balloonTemplate = document.querySelector('#card').content.querySelector('.popup');
-  const popupElement = balloonTemplate.cloneNode(true);
-  const popupPhoto = popupElement.querySelector('.popup__photos');
-  popupPhoto.innerHTML = '';
+  const balloonTemplateElement = document.querySelector('#card').content.querySelector('.popup');
+  const popupElement = balloonTemplateElement.cloneNode(true);
+  const popupPhotoElement = popupElement.querySelector('.popup__photos');
+  popupPhotoElement.innerHTML = '';
   const popupFeatures = popupElement.querySelectorAll('.popup__features li');
   const typesMap = {
     flat: 'Квартира',
@@ -100,7 +107,7 @@ const createCustomPopup = ({offer, author}) => {
       photo.alt = 'Фотография жилья';
       photo.src = elem;
 
-      popupPhoto.appendChild(photo);
+      popupPhotoElement.appendChild(photo);
     });
   }
   return popupElement;
@@ -138,7 +145,7 @@ const renderMarkers = (element) => {
 let data;
 
 const changeHandler = (arr) => {
-  form.addEventListener('change', () => {
+  formElement.addEventListener('change', () => {
     for (let i = 0; i < mapMarkers.length; i++) {
       map.removeLayer(mapMarkers[i]);
     }
@@ -170,4 +177,4 @@ getData((cards) => {
 
 });
 
-export {map};
+export {map, mainPinMarker, defaultPoint};
